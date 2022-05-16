@@ -78,7 +78,7 @@ const registerTransactionProposals = async (
 ) => {
   for (const transactionData of transactions) {
     const { description, transaction: data, transaction_details: details } = transactionData
-    const proposal = { provider, transaction: { description, data, details } }
+    const proposal = { transaction: { data, description, details, provider } }
 
     await post(twoPi, routes.proposalsPath, { proposal })
   }
