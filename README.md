@@ -108,6 +108,8 @@ On every `twoPi` instance you can access the following attributes:
   * `transactions`?: array of executed transactions as [transaction receipts](https://docs.ethers.io/v5/single-page/#/v5/api/providers/types/-%23-providers-TransactionReceipt) (in case of error, the last one should have the required information to trace the reason).
   * `message`?: in case of failed or error, the overall main reason description.
   * `cursor`?: in case of failed or error, the index (zero based) of the failed transaction.
+* `async getProposals({status?})` it returns an array of available proposals (each of which are Proposal instances). You can give an optional filter object like `{status: 'pending'}` and narrow down the results to pending and queued statuses (by default it returns the ones with status executed or errored).
+* `async deleteProposal(proposal)` deletes the given proposal.
 * `async faucet({network, address})` it transfer some native tokens to the given `address`. You should ask our team to enable this feature (use the Discord channel below). For `network` the only allowed value for the time being is `'polygon'`. If `address` has already the minimum native token balance (0.1 MATIC on Polygon) nothing is done, it gets completed to this value otherwise. Returns an object with the following attributes:
   * `status`: can be 'success', 'error'
   * `message`?: in case of failed or error, the overall main reason description.
@@ -131,6 +133,31 @@ On every `vault` instance you can access the following attributes:
 ### Vault private methods
 
 * `constructor({identifier, pid, token, address, tokenAddress, tokenDecimals, vaultDecimals, apy, tvl, balances, deposits})` refer to [Vault private attributes](#vault-private-attributes) to get a description of each argument and attribute.
+
+### Proposal private attributes
+
+On every `proposal` instance you can access the following attributes:
+
+* `id`: the proposal ID.
+* `status`: string identifying the status, posible values are: pending, queued, executed and errored.
+* `transaction`: object containing information about the proposed transaction.
+  * `description`: string describing the transaction purpose.
+  * `details`: object with the function and arguments to be called.
+    * `to`: string with the contract address.
+    * `function`: string with the function to be called.
+    * `arguments`: array of strings with the arguments passed to the function.
+  * `data`: object with the same function and arguments as `details`, but encoded to be used directly with ethers or some similar library.
+    * `to`: string with the contract address.
+    * `data`: string with the function and arguments encoded.
+  * `provider`: object with data about the provider. Just as a suggestion, the only argument that is really important is the `chainId`.
+    * `chainId`: the network identifier as a number.
+    * `gasPrice`: suggested gas price to be used (based on the current network information) as a number.
+    * `rpcUrl`: suggested RPC as a string.
+* `createdAt`: date on which the proposal was created.
+
+### Proposal private methods
+
+* `constructor({id, status, transaction, createdAt})` refer to [Proposal private attributes](#proposal-private-attributes) to get a description of each argument and attribute.
 
 ## Warning
 

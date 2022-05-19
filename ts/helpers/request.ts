@@ -47,3 +47,13 @@ export const post = async (
 
   return await axios.post(`${twoPi.endpoint}/${path}`, data, config)
 }
+
+export const $delete = async (
+  twoPi:  TwoPi,
+  path:   string,
+  params: Record<string, unknown> | undefined
+): Promise<AxiosResponse> => {
+  const config = await initialConfig(twoPi)
+
+  return await axios.delete(`${twoPi.endpoint}/${path}`, { ...config, params })
+}

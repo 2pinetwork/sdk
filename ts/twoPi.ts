@@ -1,9 +1,21 @@
 import { Wallet } from 'ethers'
-import { getVaults, Vault, Filter } from './vaults'
 import { deposit } from './helpers/deposit'
 import { faucet } from './helpers/faucet'
 import { TransactionsResponse } from './helpers/transaction'
 import { withdraw } from './helpers/withdraw'
+
+import {
+  getVaults,
+  Vault,
+  Filter as VaultFilter
+} from './vaults'
+
+import {
+  deleteProposal,
+  getProposals,
+  Proposal,
+  Filter as ProposalFilter
+} from './proposals'
 
 type Constructor = {
   mnemonic?:  string
@@ -50,7 +62,9 @@ export default class TwoPi {
     this.endpoint  = endpoint || 'https://api.2pi.network'
   }
 
-  async getVaults(filter: Filter): Promise<Array<Vault>> {
+  // Vault interactions
+
+  async getVaults(filter: VaultFilter): Promise<Array<Vault>> {
     return await getVaults(this, filter)
   }
 
@@ -75,6 +89,18 @@ export default class TwoPi {
       unit: unit || 'wei'
     })
   }
+
+  // Proposal interactions
+
+  async getProposals(filter: ProposalFilter): Promise<Array<Proposal>> {
+    return await getProposals(this, filter)
+  }
+
+  async deleteProposal(proposal: Proposal): Promise<boolean> {
+    return await deleteProposal(this, proposal)
+  }
+
+  // Faucet interactions
 
   async faucet({ network, address }: Faucet): TransactionsResponse {
     return await faucet(this, { network, address })
